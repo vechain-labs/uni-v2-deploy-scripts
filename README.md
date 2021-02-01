@@ -50,10 +50,11 @@ tx_id: 0x0cab372aa9ca77d0c724fa2774bca208324a8c03648fbf02c3b14fecf2b05a56
 6. Approve 100 VTHO to router:
 tx_id: 0xd3c67b520bca9603e0630515a866b284b9f75737ac73836c36c826729b3da4e7
 
-7. Call addLiquidity(tokenA, tokenB, 100, 100) on router:
+7. Call addLiquidity() (vVET=100, VTHO=100) on router:
 tx_id: 0xdc1f2929866e7fe8067a3f6a3e312eba77b9ba6bf9b24665b422f43ea2589b01
 
 8. Call getAmountsIn / getAmountsOut on router to get price quote:
 view type function won't need a tx_id
 
-9. 
+9. Swap 30 VTHO for VET (actually got 23 VET):
+tx_id: 0xfb1ef1bccbf9623a1215480b148d2ed526e44c2e60e548ba627a228a30bb7317
