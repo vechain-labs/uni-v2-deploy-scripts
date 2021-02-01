@@ -13,6 +13,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
     mapping(address => uint) public balanceOf;
     mapping(address => mapping(address => uint)) public allowance;
 
+    // VeChain lack of OPCODE:chainId
     bytes32 public DOMAIN_SEPARATOR;
     // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
     bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
@@ -78,6 +79,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
         return true;
     }
 
+    // VeChain lack of OPCODE:chainId
     function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
         require(false, "Error: OPCODE chainid not supported, avoid this function");
         require(deadline >= block.timestamp, 'UniswapV2: EXPIRED');
