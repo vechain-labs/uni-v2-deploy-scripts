@@ -23,7 +23,5 @@ function totalSupply() public view returns (uint) {
 }
 
 // Fixed by:
-
-old EVM Version: Istanbul 
-upgrade to: Constantinople
+Downgrade emv_verion from `Istanbul` to `Constantinople`
 ```

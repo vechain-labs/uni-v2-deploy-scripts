@@ -1,0 +1,4 @@
+compiler:
+    evm_version: constantinople
+    solc:
+        version: 0.6.6
