@@ -81,7 +81,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
 
     // VeChain lack of OPCODE:chainId
     function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
-        require(false, "Error: OPCODE chainid not supported, avoid this function");
+        require(false, 'UniswapV2: FUNCTION_DISABLED');
         require(deadline >= block.timestamp, 'UniswapV2: EXPIRED');
         bytes32 digest = keccak256(
             abi.encodePacked(
