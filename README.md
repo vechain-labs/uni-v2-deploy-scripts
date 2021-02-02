@@ -1,4 +1,7 @@
 # Uniswap V2
+```
+Please note this is a draft and this code is under heavy development. Not to be used in production.
+```
 
 ```
 ├── core        # uniswap-core
