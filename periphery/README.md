@@ -1,19 +1,22 @@
 # Periphery
 
-Mainly RouterV02
+# Code
 
-Problems:
+Level with:
+
+uniswap-v2-periphery
+
+https://github.com/Uniswap/uniswap-v2-periphery/commit/dda62473e2da448bc9cb8f4514dadda4aeede5f4
+
+uniswap-lib
+
+https://github.com/Uniswap/uniswap-lib/commit/c01640b0f0f1d8a85cba8de378cc48469fcfd9a6
+
+## Problems
 ```
 Requires 0.6.6 compiler.
 
 Fixed by:
 
-Set brownie-config.yml
+Set this value in brownie-config.yml
 ```
-
-UniswapV2Router02
-
-on Testnet:
-Deploy Tx (4757 vtho): 0xb103f82aecddb10392e37037642cbe5d6f3f59e26ad024a60a4584018f672398
-Deployer: 0x422D582C08d7965cD5Fefef1572faaA15783f473
-Contract Address: 0x6917a3f8D47B729286C0126FaD7C93BD7fA35752
