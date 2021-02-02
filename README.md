@@ -6,6 +6,23 @@
 └── vvet        # WETH9
 ```
 
+## Local Development
+```bash
+# Create virtual environment
+
+$ cd swap/
+$ python3 -m venv .env
+$ source .env/bin/activate
+(.env) $
+
+# install eth-brownie
+(.env) $ pip3 install eth-brownie
+
+# Compile contracts, get bytecode and abi.
+(.env) $ cd core/
+(.env) $ brownie compile
+```
+
 ### Deploy steps:
 
 0. Deploy vVET.sol (WETH9)
