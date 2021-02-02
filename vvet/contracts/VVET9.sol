@@ -21,7 +21,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 contract VVET9 {
-    string public name     = "Wrapped VET";
+    string public name     = "Veiled VET";
     string public symbol   = "VVET";
     uint8  public decimals = 18;
 
