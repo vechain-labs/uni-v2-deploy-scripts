@@ -76,8 +76,3 @@ tx_id: 0x2fcafd793aff52e978ee57ba29ad962e108374529f4f7b98da5e1b242bff27fc
 ```
 view type function won't need a tx_id
 ```
-
-9. Swap 30 VTHO for VET (actually got 23 VET):
-```
-tx_id: 0xfb1ef1bccbf9623a1215480b148d2ed526e44c2e60e548ba627a228a30bb7317
-```
