@@ -12,19 +12,14 @@
 
 ## Local Development
 ```bash
-# Create virtual environment
-
-$ cd swap/
-$ python3 -m venv .env
-$ source .env/bin/activate
-(.env) $
-
-# install eth-brownie
-(.env) $ pip3 install eth-brownie
-
-# Compile contracts, get bytecode and abi.
-(.env) $ cd core/
-(.env) $ brownie compile
+# Make sure you have python3
+$ python3 --version
+# Install dependencies (virtual env)
+$ make install
+# Compile all the contracts
+$ make
+# Deploy the contacts
+$ make deploy
 ```
 
 ### Deploy steps:

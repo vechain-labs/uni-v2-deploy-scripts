@@ -1,2 +1,3 @@
-thor-devkit
 eth-brownie
+requests
+thor-devkit
