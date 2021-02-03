@@ -18,8 +18,7 @@ library UniswapV2Library {
     // calculates the CREATE2 address for a pair without making any external calls
     function pairFor(address factory, address tokenA, address tokenB) internal view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        // vechain: hash maybe incorrect for generating CREATE2 address for pair. (due to bytecode change)
-        // vechain: so I changed it to calling the factory contract directly.
+        // TODO: hash maybe incorrect for generating CREATE2 address for pair. (due to bytecode change)
         // pair = address(uint(keccak256(abi.encodePacked(
         //         hex'ff',
         //         factory,
