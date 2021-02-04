@@ -1,19 +1,15 @@
 '''
 Deploy the Uniswap automatically on VeChain.
 '''
-import time
-import secrets
 import json
+import secrets
+import sys
+import time
+from typing import Union
+
 import requests
 from thor_devkit import abi, cry, transaction
-
-NETWORK = 'https://solo.veblocks.net'
-CHAIN_TAG = int('a4', 16)
-
-DEVELOPER = {
-    'address': '0x7567d83b7b8d80addcb281a71d54fc7b3364ffed',
-    'private': 'dce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65'
-}
+from thor_devkit.cry import secp256k1
 
 TARGETS = {
     'vvet': 'vvet/build/contracts/VVET9.json',
@@ -24,7 +20,12 @@ TARGETS = {
 VTHO_CONTRACT = '0x0000000000000000000000000000456e65726779'
 
 
+def make_chaintag(hex_str: str):
+    return int(hex_str, 16)
+
+
 def read_json_file(path_like: str) -> dict:
+    ''' Read json file '''
     with open(path_like, 'r') as f:
         return json.load(f)
 
@@ -40,15 +41,30 @@ def build_params(types: list, args: list) -> bytes:
 
 
 def _build_url(base: str, tail: str) -> str:
+    ''' Build URLs '''
     return base.rstrip('/') + '/' + tail.lstrip('/')
+
+
+def get_block(network: str, id_or_number: str = 'best') -> dict:
+    ''' Get a block, default get "best" block '''
+    url = _build_url(network, f'blocks/{id_or_number}')
+    r = requests.get(url, headers={'accept':'application/json'})
+    if not (r.status_code == 200):
+        raise Exception(f'Cant connect to {url}, error {r.text}')
+    return r.json()
 
 
 def best_block(network: str) -> dict:
     ''' Get best block '''
-    url = _build_url(network, 'blocks/best')
+    return get_block(network)
+
+
+def get_account(network: str, account_id: str, block: str = "best") -> dict:
+    ''' Query account status against the best (or your choice) block '''
+    url = _build_url(network, f'/accounts/{account_id}?revision={block}')
     r = requests.get(url, headers={'accept':'application/json'})
     if not (r.status_code == 200):
-        raise Exception(f'Cant connect to {url}')
+        raise Exception(f'Cant connect to {url}, error {r.text}')
     return r.json()
 
 
@@ -58,10 +74,19 @@ def _calc_blockRef(block: dict) -> str:
 
 
 def _calc_nonce() -> str:
+    ''' Get a random number for nonce '''
     return int(secrets.token_hex(8), 16)
 
 
-def build_tx(priv:str, network:str, chainTag: int, to: str, value: int, data: str, gas: int, dependsOn=None) -> str:
+def _calc_address(priv: bytes) -> str:
+    public_key = secp256k1.derive_publicKey(priv)
+    _address_bytes = cry.public_key_to_address(public_key)
+    address = '0x' + _address_bytes.hex()
+    return address
+
+
+def build_tx(priv: str, network: str, chainTag: int, to: str, value: int, data: str, gas: int, dependsOn=None) -> str:
+    ''' Build a tx '''
     block = best_block(network)
     blockRef = _calc_blockRef(block)
     nonce = _calc_nonce()
@@ -108,7 +133,8 @@ def post_tx(network: str, raw: str) -> str:
     return r.json()['id']
 
 
-def tx_receipt(network: str, tx_id: str) -> dict:
+def tx_receipt(network: str, tx_id: str) -> Union[dict, None]:
+    ''' Fetch tx receipt as a dict, or None '''
     url = _build_url(network, f'transactions/{tx_id}/receipt')
     r = requests.get(url, headers={'accept':'application/json'})
     if not (r.status_code == 200):
@@ -118,11 +144,12 @@ def tx_receipt(network: str, tx_id: str) -> dict:
 
 
 def is_reverted(receipt: dict) -> bool:
+    ''' Check receipt to see if tx is reverted '''
     return receipt['reverted']
 
 
 def _find_created_contracts(receipt: dict) -> list:
-    ''' Return a list of contract addresses created '''
+    ''' Read receipt and return a list of contract addresses created '''
     a = []
     for x in receipt['outputs']:
         if x.get('contractAddress'):
@@ -131,22 +158,27 @@ def _find_created_contracts(receipt: dict) -> list:
     return a
 
 
-def wait_for_receipt(network: str, tx_id: str):
+def wait_for_receipt(network: str, tx_id: str, wait_for: int = 10) -> dict:
+    ''' Wait for wait_for seconds (default 10s) to find the receipt on-chain '''
+    interval = 3
+    rounds = wait_for // interval
     receipt = None
-    for _ in range(5):
-        if not receipt:
-            time.sleep(3)
-            receipt = tx_receipt(network, tx_id)
-        else:
+    for _ in range(rounds):
+        receipt = tx_receipt(network, tx_id)
+        if receipt:
             break
+        else:
+            time.sleep(3)
+
     if not receipt:
-        raise Exception("Cannot get receipt after a while, tx dropped?")
-    else:
-        return receipt
+        raise Exception(f"Cannot get receipt after {wait_for}s, tx dropped?")
+
+    return receipt
 
 
 def deploy(network: str, chainTag: int, contract_meta: dict, types: list, params: list, priv: str, to: str, value: int, gas: int) -> str:
-    print(f'Deploy: {contract_meta["contractName"]}')
+    ''' Deploy a smart contract to the chain '''
+    print(f'Deploy contract: <{contract_meta["contractName"]}>')
     if not types:
         data_bytes = get_bytecode(contract_meta)
     else:
@@ -163,13 +195,16 @@ def deploy(network: str, chainTag: int, contract_meta: dict, types: list, params
         raise Exception('reverted')
     else:
         addrs = _find_created_contracts(receipt)
-        print(f"deployed on: {addrs[0]}")
+        print(f"Deployed on: {addrs[0]}")
         return addrs[0]
 
 
 def call_function(network:str, chainTag: str, abi_dict: dict, func_params: list, priv: str, to: str, value: int, gas: int) -> str:
+    ''' Call a smart contract function on-chain '''
     f1 = abi.FUNCTION(abi_dict)
-    print(f'call contract: {to} func: {f1["name"]} with params:', func_params)
+    print(f'Call contract: {to}')
+    print(f'function: {f1["name"]}')
+    print(f'params: {func_params}')
     f = abi.Function(f1)
     data = f.encode(func_params, to_hex=True)
 
@@ -181,13 +216,12 @@ def call_function(network:str, chainTag: str, abi_dict: dict, func_params: list,
 
     if is_reverted(receipt):
         raise Exception('reverted')
-    else:
-        print('Call success')
     
     return tx_id
 
 
-def find_func_abi(contract_meta: dict, func_name: str) -> dict:
+def find_func_abi(contract_meta: dict, func_name: str) -> Union[dict, None]:
+    ''' Find the function by name in the contract meta '''
     abis = contract_meta["abi"]
     for each in abis:
         if each.get('name') == func_name:
@@ -195,22 +229,40 @@ def find_func_abi(contract_meta: dict, func_name: str) -> dict:
 
 
 if __name__ == "__main__":
-    # Deploy VVET
-    vvet = read_json_file(TARGETS['vvet'])
-    vvet_contract_addr = deploy(NETWORK, CHAIN_TAG, vvet, None, None, DEVELOPER['private'], None, 0, 3000000)
-    
-    # Deploy Factory
-    factory = read_json_file(TARGETS['factory'])
-    fee_to_setter = DEVELOPER['address']
-    factory_contract_addr = deploy(NETWORK, CHAIN_TAG, factory, ['address'], [fee_to_setter], DEVELOPER['private'], None, 0, 3000000)
+    # sys.argv = [script_name, private_key, netowrk, chaintag]
+    DEPLOYER = {
+        'address': _calc_address(bytes.fromhex(sys.argv[1])),
+        'private': sys.argv[1]
+    }
+    NETWORK = sys.argv[2] # eg. 'https://solo.veblocks.net'
+    CHAIN_TAG = int(sys.argv[3], 16) # eg. '0xa4'
 
-    # Deploy Router
-    router = read_json_file(TARGETS['router'])
-    router_contract_addr = deploy(NETWORK, CHAIN_TAG, router, ['address','address'], [factory_contract_addr, vvet_contract_addr], DEVELOPER['private'], None, 0, 5000000)
+    print('Deployer Balance:')
+    acc = get_account(NETWORK, DEPLOYER['address'])
+    print('VET:', int(acc['balance'], 16) / (10 ** 18))
+    print('VTHO:', int(acc['energy'], 16) / (10 ** 18))
+    print('EOA:', not acc['hasCode'])
+
+    # Need at least 14k vtho to deploy those contracts!
+    assert int(acc['energy'], 16) / (10 ** 18) > 14000, "Insufficient VTHO"
+    assert (not acc['hasCode']), "Only EOA accouts can deploy this"
+
+    # Deploy VVET (3000 VTHO)
+    vvet = read_json_file(TARGETS['vvet'])
+    vvet_contract_addr = deploy(NETWORK, CHAIN_TAG, vvet, None, None, DEPLOYER['private'], None, 0, 3000000)
     
-    # Create VVET/VTHO pair
+    # Deploy Factory (3000 VTHO)
+    factory = read_json_file(TARGETS['factory'])
+    fee_to_setter = DEPLOYER['address']
+    factory_contract_addr = deploy(NETWORK, CHAIN_TAG, factory, ['address'], [fee_to_setter], DEPLOYER['private'], None, 0, 3000000)
+
+    # Deploy Router (5000 VTHO)
+    router = read_json_file(TARGETS['router'])
+    router_contract_addr = deploy(NETWORK, CHAIN_TAG, router, ['address','address'], [factory_contract_addr, vvet_contract_addr], DEPLOYER['private'], None, 0, 5000000)
+    
+    # Create VVET/VTHO pair (2500 VTHO)
     createPair_abi = find_func_abi(factory, 'createPair')
     if not createPair_abi:
         raise Exception("Cannot find createPair abi")
     
-    call_function(NETWORK, CHAIN_TAG, createPair_abi, [vvet_contract_addr, VTHO_CONTRACT], DEVELOPER['private'], factory_contract_addr, 0, 2500000)
+    call_function(NETWORK, CHAIN_TAG, createPair_abi, [vvet_contract_addr, VTHO_CONTRACT], DEPLOYER['private'], factory_contract_addr, 0, 2500000)

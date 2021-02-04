@@ -1,7 +1,6 @@
 # Uniswap V2
 
-**Please note this is a draft and this code is under heavy development. NOT to be used in production.**
-
+// **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
 
 ```
@@ -18,8 +17,10 @@ $ python3 --version
 $ make install
 # Compile all the contracts
 $ make
-# Deploy the contacts
+# Deploy the contacts (default: solo network, with deployer 0x7567d83b7b8d80addcb281a71d54fc7b3364ffed)
 $ make deploy
+# Deploy with other options
+$ make deploy private={private_key} network={http://....} chaintag={0x..}
 ```
 
 ### Deploy steps:
