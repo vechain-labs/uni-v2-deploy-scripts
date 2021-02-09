@@ -19,13 +19,14 @@ library UniswapV2Library {
     function pairFor(address factory, address tokenA, address tokenB) internal view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         // TODO: hash maybe incorrect for generating CREATE2 address for pair. (due to bytecode change)
-        // pair = address(uint(keccak256(abi.encodePacked(
-        //         hex'ff',
-        //         factory,
-        //         keccak256(abi.encodePacked(token0, token1)),
-        //         hex'96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f' // init code hash
-        //     ))));
-        pair = IUniswapV2Factory(factory).getPair(token0, token1);
+        pair = address(uint(keccak256(abi.encodePacked(
+                hex'ff',
+                factory,
+                keccak256(abi.encodePacked(token0, token1)),
+                hex'562f2d7da4edf65b4ccd515d0735f351468cd0b5af54e7395c6890f88247e6d5' // init code hash
+            ))));
+        // TODO: for a temp solution (waste more gas)
+        // pair = IUniswapV2Factory(factory).getPair(token0, token1);
     }
 
     // fetches and sorts the reserves for a pair

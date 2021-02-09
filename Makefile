@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-export network=https://solo.veblocks.net
+export network=http://solo.veblocks.net
 export chaintag=0xa4
 export private=dce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65 # address: 0x7567d83b7b8d80addcb281a71d54fc7b3364ffed
 
