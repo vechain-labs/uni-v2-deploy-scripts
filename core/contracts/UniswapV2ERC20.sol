@@ -22,9 +22,12 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
     event Transfer(address indexed from, address indexed to, uint value);
 
     constructor() public {
-        // TODO: OPCODE chainid not supported on VeChain yet. We fix this to 1.
+        // TODO: OPCODE chainid not supported on VeChain yet.
+        // mainnet: 0x4a
+        // testnet: 0x27
+        // solo: 0xa4
         // But really needs to be fixed before launch!
-        uint chainId = 1;
+        uint chainId = 0x27;
         // assembly {
         //     chainId := chainid
         // }

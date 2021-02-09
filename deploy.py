@@ -158,7 +158,7 @@ def _find_created_contracts(receipt: dict) -> list:
     return a
 
 
-def wait_for_receipt(network: str, tx_id: str, wait_for: int = 10) -> dict:
+def wait_for_receipt(network: str, tx_id: str, wait_for: int = 20) -> dict:
     ''' Wait for wait_for seconds (default 10s) to find the receipt on-chain '''
     interval = 3
     rounds = wait_for // interval

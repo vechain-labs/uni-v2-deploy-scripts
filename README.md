@@ -29,8 +29,8 @@ Some contracts are deployed on testnet:
 
 | Contract       | Address                                    |
 | -------------- | ------------------------------------------ |
-| vVET           | 0xcFc6be8bB30FBAc8cECF8f943810eE0C561b4F7a |
+| vVET           | 0x37a3e90ff4a6eb312097367e0210d7d7d9699fdd |
 | vtho           | 0x0000000000000000000000000000456e65726779 |
-| factory        | 0xfa00742a63f20B4a867cfd0758bf3bd39B5ce6af |
-| router02       | 0x084b404b3A75e22Aa015b88eb160D22D3a81e719 |
-| vVET/VTHO pool | 0x306adfec67692dc0a3c4a6b2282be1d4877d98ca |
+| factory        | 0xa876ea32b4540780a51fdf795a28ba1930231aa9 |
+| router02       | 0x2ea79c98350d7d2bec2225f1bb7587d3fd355fa0 |
+| vVET/VTHO pool | 0xc6ff007b5e42c270089f120f485e184e52c50f4b |
