@@ -11,12 +11,6 @@ import requests
 from thor_devkit import abi, cry, transaction
 from thor_devkit.cry import secp256k1
 
-TARGETS = {
-    'vvet': 'vvet/build/contracts/VVET9.json',
-    'factory': 'core/build/contracts/UniswapV2Factory.json',
-    'router': 'periphery/build/contracts/UniswapV2Router02.json'
-}
-
 VTHO_CONTRACT = '0x0000000000000000000000000000456e65726779'
 
 
@@ -178,7 +172,7 @@ def wait_for_receipt(network: str, tx_id: str, wait_for: int = 20) -> dict:
 
 def deploy(network: str, chainTag: int, contract_meta: dict, types: list, params: list, priv: str, to: str, value: int, gas: int) -> str:
     ''' Deploy a smart contract to the chain '''
-    print(f'Deploy contract: <{contract_meta["contractName"]}>')
+    print(f'Deploy contract: <{contract_meta.get("contractName")}>')
     if not types:
         data_bytes = get_bytecode(contract_meta)
     else:
@@ -192,7 +186,7 @@ def deploy(network: str, chainTag: int, contract_meta: dict, types: list, params
     receipt = wait_for_receipt(network, tx_id)
 
     if is_reverted(receipt):
-        raise Exception('reverted')
+        raise Exception('Deploy reverted')
     else:
         addrs = _find_created_contracts(receipt)
         print(f"Deployed on: {addrs[0]}")
@@ -229,13 +223,18 @@ def find_func_abi(contract_meta: dict, func_name: str) -> Union[dict, None]:
 
 
 if __name__ == "__main__":
-    # sys.argv = [script_name, private_key, netowrk, chaintag]
+    # sys.argv = [script_name, private_key, netowrk, chaintag, vvet, factory, router]
     DEPLOYER = {
         'address': _calc_address(bytes.fromhex(sys.argv[1])),
         'private': sys.argv[1]
     }
     NETWORK = sys.argv[2] # eg. 'https://solo.veblocks.net'
     CHAIN_TAG = int(sys.argv[3], 16) # eg. '0xa4'
+    TARGETS = {
+        'vvet': sys.argv[4],
+        'factory': sys.argv[5],
+        'router': sys.argv[6]
+    }
 
     print('Deployer Balance:')
     acc = get_account(NETWORK, DEPLOYER['address'])

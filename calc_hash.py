@@ -1,4 +1,5 @@
 import json
+import sys
 from thor_devkit import cry
 
 def read_json_file(path_like: str) -> dict:
@@ -7,7 +8,10 @@ def read_json_file(path_like: str) -> dict:
         return json.load(f)
 
 if __name__ == "__main__":
-    b = read_json_file('./core/build/contracts/UniswapV2Pair.json')
+    file_path = './core/build/contracts/UniswapV2Pair.json'
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+    b = read_json_file(file_path)
     h = bytes.fromhex(b['bytecode'])
     digest, _ = cry.keccak256([h])
     print('UniswapV2Pair init_code_hash:', digest.hex())
