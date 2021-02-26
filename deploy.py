@@ -172,7 +172,8 @@ def wait_for_receipt(network: str, tx_id: str, wait_for: int = 20) -> dict:
 
 def deploy(network: str, chainTag: int, contract_meta: dict, types: list, params: list, priv: str, to: str, value: int, gas: int) -> str:
     ''' Deploy a smart contract to the chain '''
-    print(f'Deploy contract: <{contract_meta.get("contractName")}>')
+    _contract_name = contract_meta.get("contractName") or json.loads(contract_meta['metadata'])['settings']['compilationTarget']
+    print(f'Deploy contract: <{_contract_name}>')
     if not types:
         data_bytes = get_bytecode(contract_meta)
     else:
@@ -209,7 +210,7 @@ def call_function(network:str, chainTag: str, abi_dict: dict, func_params: list,
     receipt = wait_for_receipt(network, tx_id)
 
     if is_reverted(receipt):
-        raise Exception('reverted')
+        raise Exception('Call reverted')
     
     return tx_id
 
@@ -249,19 +250,27 @@ if __name__ == "__main__":
     # Deploy VVET (3000 VTHO)
     vvet = read_json_file(TARGETS['vvet'])
     vvet_contract_addr = deploy(NETWORK, CHAIN_TAG, vvet, None, None, DEPLOYER['private'], None, 0, 3000000)
-    
-    # Deploy Factory (3000 VTHO)
+
+    # Deploy Factory (6000 VTHO)
     factory = read_json_file(TARGETS['factory'])
     fee_to_setter = DEPLOYER['address']
-    factory_contract_addr = deploy(NETWORK, CHAIN_TAG, factory, ['address'], [fee_to_setter], DEPLOYER['private'], None, 0, 3000000)
+    factory_contract_addr = deploy(NETWORK, CHAIN_TAG, factory, ['address'], [fee_to_setter], DEPLOYER['private'], None, 0, 6000000)
 
-    # Deploy Router (5000 VTHO)
+    # Deploy Router (10000 VTHO)
     router = read_json_file(TARGETS['router'])
-    router_contract_addr = deploy(NETWORK, CHAIN_TAG, router, ['address','address'], [factory_contract_addr, vvet_contract_addr], DEPLOYER['private'], None, 0, 5000000)
-    
-    # Create VVET/VTHO pair (2500 VTHO)
+    router_contract_addr = deploy(NETWORK, CHAIN_TAG, router, ['address','address'], [factory_contract_addr, vvet_contract_addr], DEPLOYER['private'], None, 0, 10000000)
+
+    # Create VVET/VTHO pair (5000 VTHO)
     createPair_abi = find_func_abi(factory, 'createPair')
     if not createPair_abi:
         raise Exception("Cannot find createPair abi")
-    
-    call_function(NETWORK, CHAIN_TAG, createPair_abi, [vvet_contract_addr, VTHO_CONTRACT], DEPLOYER['private'], factory_contract_addr, 0, 2500000)
+
+    call_function(NETWORK, CHAIN_TAG, createPair_abi, [vvet_contract_addr, VTHO_CONTRACT], DEPLOYER['private'], factory_contract_addr, 0, 5000000)
+
+    # Deposit 1000 VET and 1000 VTHO to bootstrap the pool.
+    # 1. Approve Router02 with 1000 VTHO
+    # 2. Call addLiquidityETH() and send 1000 VET along with the tx.
+
+    # Remove LP:
+    # 1. Appprove Router02 with all the LP tokens.
+    # 2. Call removeLiquidityETH() to widthdraw all the tokens left.
