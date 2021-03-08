@@ -251,14 +251,20 @@ if __name__ == "__main__":
     vvet = read_json_file(TARGETS['vvet'])
     vvet_contract_addr = deploy(NETWORK, CHAIN_TAG, vvet, None, None, DEPLOYER['private'], None, 0, 3000000)
 
+    print('-' * 18)
+
     # Deploy Factory (6000 VTHO)
     factory = read_json_file(TARGETS['factory'])
     fee_to_setter = DEPLOYER['address']
     factory_contract_addr = deploy(NETWORK, CHAIN_TAG, factory, ['address'], [fee_to_setter], DEPLOYER['private'], None, 0, 6000000)
 
+    print('-' * 18)
+
     # Deploy Router (10000 VTHO)
     router = read_json_file(TARGETS['router'])
     router_contract_addr = deploy(NETWORK, CHAIN_TAG, router, ['address','address'], [factory_contract_addr, vvet_contract_addr], DEPLOYER['private'], None, 0, 10000000)
+
+    print('-' * 18)
 
     # Create VVET/VTHO pair (5000 VTHO)
     createPair_abi = find_func_abi(factory, 'createPair')
@@ -267,9 +273,50 @@ if __name__ == "__main__":
 
     call_function(NETWORK, CHAIN_TAG, createPair_abi, [vvet_contract_addr, VTHO_CONTRACT], DEPLOYER['private'], factory_contract_addr, 0, 5000000)
 
+    print('-' * 18)
+
+    # Add LP:
     # Deposit 1000 VET and 1000 VTHO to bootstrap the pool.
-    # 1. Approve Router02 with 1000 VTHO
-    # 2. Call addLiquidityETH() and send 1000 VET along with the tx.
+    # 1. Approve Router02 with 1000 VTHO (call on vtho contract)
+    # 2. Call addLiquidityETH() and send 1000 VET along with the tx. (call on Router02 contract)
+    print('Try to add 1000 VTHO + 1000 VET to the pool for initial liquidity...')
+    
+    vtho_approve_abi = {
+        "constant": False,
+        "inputs": [
+            {
+            "name": "_spender",
+            "type": "address"
+            },
+            {
+            "name": "_value",
+            "type": "uint256"
+            }
+        ],
+        "name": "approve",
+        "outputs": [
+            {
+            "name": "success",
+            "type": "bool"
+            }
+        ],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+    # Call using gas 100 VTHO (actual ~45 vtho)
+    call_function(NETWORK, CHAIN_TAG, vtho_approve_abi, [router_contract_addr, 1000 * (10**18)], DEPLOYER['private'], VTHO_CONTRACT, 0, 100 * 1000)
+    print('-' * 18)
+    
+    addLiquidity_abi = find_func_abi(router, 'addLiquidityETH')
+    if not addLiquidity_abi:
+        raise Exception("Cannot find addLiquidity abi")
+
+    # Call using gas 500 VTHO (actual ~206 vtho)
+    call_function(NETWORK, CHAIN_TAG, addLiquidity_abi, [VTHO_CONTRACT, 1000 * (10**18), 900 * (10**18), 900 * (10**18), DEPLOYER['address'], int(time.time()) + 1000], DEPLOYER['private'], router_contract_addr, 1000*(10**18), 500 * 1000)
+
+    print('-' * 18)
+    print('Process done.')
 
     # Remove LP:
     # 1. Appprove Router02 with all the LP tokens.
