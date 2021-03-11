@@ -1,6 +1,0 @@
-compiler:
-    evm_version: constantinople
-    solc:
-        optimizer:
-            enabled: true
-            runs: 999999

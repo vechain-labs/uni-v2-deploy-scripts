@@ -2,13 +2,6 @@
 
 // **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
-
-```
-├── core        # uniswap-core
-├── periphery   # uniswap-periphery
-└── vvet        # WETH9
-```
-
 ## Local Development
 ```bash
 # Make sure you have python3
@@ -16,21 +9,21 @@ $ python3 --version
 # Install dependencies (virtual env)
 $ make install
 # Compile all the contracts
-$ make
-# Deploy the contacts (default: solo network, with deployer 0x7567d83b7b8d80addcb281a71d54fc7b3364ffed)
 $ make deploy
+# Calculate init code hash from given json file
+$ make hash compiledfile={solc_output_file.json}
 # Deploy with other options
 $ make deploy private={private_key} network={http://....} chaintag={0x..}
 ```
 
 ## Testnet
 
-Some contracts are deployed on testnet:
+Currently, some contracts are deployed on `testnet`:
 
 | Contract       | Address                                    |
 | -------------- | ------------------------------------------ |
-| vVET           | 0x37a3e90ff4a6eb312097367e0210d7d7d9699fdd |
+| vVET           | 0x535b9a56c2f03a3658fc8787c44087574eb381fd |
 | vtho           | 0x0000000000000000000000000000456e65726779 |
-| factory        | 0xa876ea32b4540780a51fdf795a28ba1930231aa9 |
-| router02       | 0x2ea79c98350d7d2bec2225f1bb7587d3fd355fa0 |
-| vVET/VTHO pool | 0xc6ff007b5e42c270089f120f485e184e52c50f4b |
+| factory        | 0x8d77f31c128c88b52a148167cdc5439cb4bb11db |
+| router02       | 0x4c2204ebc042197a728bfe1a771301177d018e32 |
+| vVET/VTHO pool | 0x40d1a9b8b27d4f6799513575b957aaf1e0688d8a |
