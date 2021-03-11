@@ -1,5 +1,7 @@
 # Uniswap V2 Deployement Tools.
 
+Please clone `uni-v2` and `vvet` repos alongside repo.
+
 // **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
 ## Local Development
