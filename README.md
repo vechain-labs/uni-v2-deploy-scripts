@@ -11,18 +11,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 
 // **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
-## Local Development
+## How TO
+### Install depedencies
 ```bash
-# Make sure you have python3
-$ python3 --version
-# Install dependencies (virtual env)
-$ make install
-# Compile all the contracts
-$ make deploy
-# Calculate init code hash from given json file
-$ make hash compiledfile={solc_output_file.json}
-# Deploy with other options
-$ make deploy private={private_key} network={http://....} chaintag={0x..}
+make install
+```
+
+### Deploy vVET
+```bash
+make deploy_vvet network={http://url} private={private_key} vvet={/path/to/vvet.json} 
+```
+
+### Deploy Factory + Router 02 of Uni v2
+```bash
+make deploy_univ2 network={http://url} private={private_key} factory={/path/to/factory.json} router{/path/to/router02.json} vvetaddress={0x....}
+```
+
+### Create Pool of vVET + VTHO
+```bash
+make create_pool network={http://url} private={private_key} factory={/path/to/factory.json} factoryaddress={0x...} vvetaddress={0x...} vthoaddress={0x...}
 ```
 
 ## Testnet
