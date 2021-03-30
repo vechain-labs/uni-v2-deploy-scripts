@@ -12,6 +12,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 // **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
 ## How TO
+
+You are encouraged to read the `Makefile` first before execute below commands.
+
 ### Install depedencies
 ```bash
 make install
@@ -28,8 +31,8 @@ make deploy_vvet network={http://url} \
 ```bash
 make deploy_univ2 network={http://url} \
     private={private_key} \
-    factory={/path/to/factory.json} \
-    router{/path/to/router02.json} \
+    factory={/path/to/UniswapV2Factory.json} \
+    router{/path/to/UniswapV2Router02.json} \
     vvetaddress={0x....}
 ```
 
@@ -37,7 +40,7 @@ make deploy_univ2 network={http://url} \
 ```bash
 make create_pool network={http://url} \
     private={private_key} \
-    factory={/path/to/factory.json} \
+    factory={/path/to/UniswapV2Factory.json} \
     factoryaddress={0x...} \
     vvetaddress={0x...} \
     vthoaddress={0x...}
