@@ -53,3 +53,7 @@ if utils.is_reverted(receipt):
     raise Exception(f"{tx_id} is reverted!")
 
 print('createPair() call success, tx_id:', tx_id)
+
+# # Read newly created pool contract address
+# response = c.call(w.getAddress(), factory_contract, 'getPair', [token_1_address, token_2_address], FACTORY_ADDRESS)
+# print(response)
