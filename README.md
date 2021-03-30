@@ -19,17 +19,28 @@ make install
 
 ### Deploy vVET
 ```bash
-make deploy_vvet network={http://url} private={private_key} vvet={/path/to/vvet.json} 
+make deploy_vvet network={http://url} \
+    private={private_key} \
+    vvet={/path/to/vvet.json} 
 ```
 
 ### Deploy Factory + Router 02 of Uni v2
 ```bash
-make deploy_univ2 network={http://url} private={private_key} factory={/path/to/factory.json} router{/path/to/router02.json} vvetaddress={0x....}
+make deploy_univ2 network={http://url} \
+    private={private_key} \
+    factory={/path/to/factory.json} \
+    router{/path/to/router02.json} \
+    vvetaddress={0x....}
 ```
 
 ### Create Pool of vVET + VTHO
 ```bash
-make create_pool network={http://url} private={private_key} factory={/path/to/factory.json} factoryaddress={0x...} vvetaddress={0x...} vthoaddress={0x...}
+make create_pool network={http://url} \
+    private={private_key} \
+    factory={/path/to/factory.json} \
+    factoryaddress={0x...} \
+    vvetaddress={0x...} \
+    vthoaddress={0x...}
 ```
 
 ## Testnet
