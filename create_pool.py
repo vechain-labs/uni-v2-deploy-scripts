@@ -39,7 +39,7 @@ if not utils.is_contract(c.get_account(token_2_address)):
     raise Exception(f"{token_2_address} is not a smart contract")
 
 # Call on factory to create a pool of token 1 and token 2
-response = c.commit(w, factory_contract, 'createPair', [token_1_address, token_2_address], FACTORY_ADDRESS)
+response = c.transact(w, factory_contract, 'createPair', [token_1_address, token_2_address], FACTORY_ADDRESS)
 tx_id = response['id']
 
 # Wait for Receipt
