@@ -1,6 +1,8 @@
 # Uniswap V2 Deployement Tools.
 
-Please clone `uni-v2` and `vvet` repos alongside repo.
+This repo doesn't contain any `solc` compiled JSON file.
+
+Clone `uni-v2` and `vvet` repos before continue.
 
 ## Disclaimer
 Redistributions of source code must retain this list of conditions and the following disclaimer.
