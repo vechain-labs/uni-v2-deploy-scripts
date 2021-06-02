@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 
 ## How TO
 
-You are encouraged to read the `Makefile` first before execute below commands.
+Read the `Makefile` first before execute below commands.
 
 ### Install depedencies
 ```bash
