@@ -34,7 +34,7 @@ make deploy_vvet network={http://url} \
 make deploy_univ2 network={http://url} \
     private={private_key} \
     factory={/path/to/UniswapV2Factory.json} \
-    router{/path/to/UniswapV2Router02.json} \
+    router={/path/to/UniswapV2Router02.json} \
     vvetaddress={0x....}
 ```
 
