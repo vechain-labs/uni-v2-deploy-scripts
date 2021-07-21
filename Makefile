@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 
-export network=http://solo.veblocks.net
-export private=dce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65 # address: 0x7567d83b7b8d80addcb281a71d54fc7b3364ffed
+export network=http://localhost:8669
+export private=99f0500549792796c14fed62011a51081dc5b5e68fe8bd8a13b86be829c4fd36 # address: 0xf077b491b355e64048ce21e3a6fc4751eeea77fa
 export vvet=../vvet/vvet/build/contracts/VVET9.json
 export factory=../uni-v2/uniswap-v2-core/build/UniswapV2Factory.json
 export router=../uni-v2/uniswap-v2-periphery/build/UniswapV2Router02.json
