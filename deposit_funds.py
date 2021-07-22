@@ -47,6 +47,8 @@ tx_id = response['id']
 receipt = c.wait_for_tx_receipt(tx_id, 30)
 if not receipt:
     raise Exception(f"receipt not found! by tx id: {tx_id}")
+
+assert utils.is_reverted(receipt) == False
 print(tx_id)
 
 
@@ -56,4 +58,6 @@ tx_id = response['id']
 receipt = c.wait_for_tx_receipt(tx_id, 30)
 if not receipt:
     raise Exception(f"receipt not found! by tx id: {tx_id}")
+
+assert utils.is_reverted(receipt) == False
 print(tx_id)
