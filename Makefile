@@ -10,8 +10,8 @@ export vvetaddress=''
 export vthoaddress=0x0000000000000000000000000000456e65726779
 export factoryaddress=''
 export routeraddress=''
-export vetamount=1000
-export vthoamount=1000
+export vetamount=100000000000000000000  # 100 VET
+export vthoamount=100000000000000000000 # 100 VTHO
 
 # install compiler tools
 install:
@@ -33,6 +33,10 @@ deploy_vvet:
 deploy_univ2:
 	. .env/bin/activate && python3 deploy_univ2.py $(network) $(private) $(factory) $(router) $(vvetaddress)
 
-# Create Pools between vVET and VTHO
+# Create Pools between vVET and VTHO (call factory.sol)
 create_pool:
 	. .env/bin/activate && python3 create_pool.py $(network) $(private) $(factory) $(factoryaddress) $(vvetaddress) $(vthoaddress)
+
+# Deposit initial funds of VET and VTHO to the pool (call router02.sol)
+deposit_funds:
+	. .env/bin/activate && python3 deposit_funds.py $(network) $(private) $(router) $(routeraddress) $(vvetaddress) $(vthoaddress) $(vvet) $(vetamount) $(vthoamount)

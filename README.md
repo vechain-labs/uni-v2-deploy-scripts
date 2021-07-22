@@ -39,6 +39,19 @@ make create_pool network={http://url} \
     vthoaddress={0x...}
 ```
 
+### Deposit intial funds of VET+VTHO into Pool
+```bash
+make deposit_funds network={http://url} \
+    private={private_key} \
+    router={/path/to/Router02.json} \
+    routeraddress={0x...} \
+    vvetaddress={0x...} \
+    vthoaddress={0x...} \
+    vvet={/path/to/vvet.json} \
+    vetamount={123456} \
+    vthoamount={123456}
+```
+
 ## Testnet
 
 Currently, some contracts are deployed on `testnet`:
