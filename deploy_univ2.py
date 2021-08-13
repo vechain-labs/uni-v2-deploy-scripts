@@ -39,7 +39,7 @@ print('Is human:', not utils.is_contract(account))
 
 # Deploy Factory
 fee_to_setter = w.getAddress() # fee to setter is me.
-response = c.deploy(w, factory_contract, ['address'], [fee_to_setter])
+response = c.deploy(w, factory_contract, ['address', 'address'], [fee_to_setter, vvet_contract_address])
 tx_id = response['id']
 print('deploy_factory_tx:', tx_id)
 
