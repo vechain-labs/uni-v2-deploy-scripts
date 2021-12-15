@@ -49,7 +49,7 @@ if not receipt:
     raise Exception(f"receipt not found! by tx id: {tx_id}")
 
 assert utils.is_reverted(receipt) == False
-print(tx_id)
+print('approve tx_id', tx_id)
 
 
 # Call to deposit vet and vtho
@@ -60,4 +60,4 @@ if not receipt:
     raise Exception(f"receipt not found! by tx id: {tx_id}")
 
 assert utils.is_reverted(receipt) == False
-print(tx_id)
+print('deposit tx_id', tx_id)

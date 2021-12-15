@@ -54,6 +54,6 @@ if utils.is_reverted(receipt):
 
 print('createPair() call success, tx_id:', tx_id)
 
-# # Read newly created pool contract address
-# response = c.call(w.getAddress(), factory_contract, 'getPair', [token_1_address, token_2_address], FACTORY_ADDRESS)
-# print(response)
+# Read newly created pool contract address
+response = c.call(w.getAddress(), factory_contract, 'getPair', [token_1_address, token_2_address], FACTORY_ADDRESS)
+print(response['decoded']['0'])
