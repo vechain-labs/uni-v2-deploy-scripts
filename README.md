@@ -2,7 +2,6 @@
 
 Clone `uni-v2` and `vvet` repos before continue.
 
-## This branch to be used with `uni-v2` repo, `vtho-withdraw` branch.
 
 // **Please note this is a draft and this code is under heavy development. NOT to be used in production.**
 
